@@ -1,96 +1,82 @@
 # SOVEREIGN SAFE
 
-SOVEREIGN SAFE is a production-grade, non-custodial, chain-agnostic wallet system designed to operate across heterogeneous blockchain protocols through a single unified execution model.
+**SOVEREIGN SAFE** is a secure cryptocurrency wallet designed for easy use on iPhone. It provides users with complete control over their digital assets while emphasizing security and user experience.
 
-The system is engineered to eliminate fragmentation between chains while preserving strict user key sovereignty, deterministic behavior, and high-performance transaction execution.
+## Features
 
----
+- **Multi-Chain Support**: Manage a variety of cryptocurrencies in a single wallet.
+- **High Security**: Utilizes biometric authentication (Face ID/Touch ID) and secure data storage.
+- **User-Friendly Interface**: Simple navigation to enhance user experience.
+- **Backup and Recovery**: Easily back up and recover your wallet with a mnemonic phrase.
+- **Fast Transactions**: Send and receive cryptocurrency with minimal steps.
 
-## Core Principles
+## Getting Started
 
-- **User-Owned Keys**  
-  Private keys are generated, stored, and used exclusively on the client. Keys never leave the device unencrypted.
+### Prerequisites
 
-- **Chain-Agnostic Architecture**  
-  Blockchain protocol differences are abstracted behind standardized adapters and a unified API gateway.
+- **Node.js**: Install [Node.js](https://nodejs.org/) (version 14 or higher).
+- **Yarn** (optional): Install [Yarn](https://yarnpkg.com/) as a package manager.
 
-- **Asset-First Design**  
-  Users interact with assets, not networks. Chain selection is handled automatically.
+### Installation
 
-- **Deterministic Wallet Core**  
-  All key derivation, address generation, and transaction intent logic is fully deterministic and auditable.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/cmiller9851-wq/sovereign-safe.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd sovereign-safe
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the application:
+   ```bash
+   npm start
+   ```
 
-- **Modular & Extensible**  
-  New blockchains and token standards can be added without modifying existing wallet or UI logic.
+## Usage
 
----
+### Creating a Wallet
+- Open the app and follow the prompts to generate a new wallet. Make sure to back up your mnemonic phrase securely.
 
-## High-Level Architecture
+### Sending Cryptocurrency
+- Enter the recipient's address and the amount you want to send. Press "Send" to initiate the transaction.
 
-Client (iOS / Web)
-↓
-Blockchain API Gateway
-↓
-Protocol Adapter Layer
-↓
-Blockchain Nodes / Indexers
+### Receiving Cryptocurrency
+- Share your wallet address or use the QR code feature to receive funds.
 
----
+## Security
 
-## System Components
+- All sensitive data, such as mnemonics and private keys, are securely stored using encryption standards.
+- Biometric authentication adds an extra layer of security when accessing the application.
 
-### Blockchain API Gateway
-- Authentication and rate limiting
-- Chain resolution and routing
-- Transaction orchestration
-- Telemetry and observability
-- Stateless, horizontally scalable design
+## Testing
 
-### Chain-Agnostic Wallet Core
-- Deterministic key derivation
-- Address generation per chain
-- Asset normalization
-- Transaction intent generation
-- Zero UI and zero network dependencies
+Run the following command to execute tests:
+```bash
+npm test
+```
 
-### Adapter Layer
-- Chain-specific transaction translation
-- Address validation
-- Fee estimation models
-- Transaction finality tracking
-- No key material and no persistent state
+### Running Tests Individually
+You can run specific tests in your test files or use a test runner.
 
-### Client Applications
-- Secure, non-custodial wallet clients
-- Biometric protection and secure enclave usage
-- Unified portfolio and transaction experience
+## Contributing
 
----
-
-## Initial Supported Blockchains
-
-- Ethereum (ETH)
-- Bitcoin (BTC)
-- Solana (SOL)
-- Binance Smart Chain (BSC)
-- Polkadot (DOT)
-- Cardano (ADA)
-- Cosmos (ATOM)
-- Tron (TRX)
-- NEO (NEO)
-- Avalanche (AVAX)
-
----
-
-## Repository Status
-
-- Architecture specification locked
-- Interfaces standardized
-- Security model defined
-- Implementation ready
-
----
+We welcome contributions! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0.
+This project is licensed under the [Apache 2.0 License](LICENSE).
+
+## Acknowledgments
+
+- Thanks to the community for providing resources and guidance.
+- Special thanks to contributors who help improve this project!
+
+## Contact
+
+For any inquiries, please reach out to quickpromptsolutions@yahoo.com or create an issue in this repository.
+
+```
