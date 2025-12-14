@@ -1,86 +1,56 @@
 # Contributing to SOVEREIGN SAFE
 
-Thank you for your interest in contributing to SOVEREIGN SAFE.  
-This project follows strict architectural and security principles. Contributions that violate these principles will not be accepted.
+Thank you for your interest in contributing to **SOVEREIGN SAFE**! We welcome contributions from everyone.
 
----
+## How to Contribute
 
-## Core Architectural Rules (Non-Negotiable)
+### 1. Fork the Repository
 
-### Wallet Core
-- Must remain fully chain-agnostic
-- Must not perform network calls
-- Must not contain UI logic
-- Must not store private keys persistently
-- Must produce deterministic results for identical inputs
+Click on the "Fork" button at the top right of the repository page to create your own copy.
 
-### Adapters
-- Must implement the standardized ChainAdapter interface
-- Must not derive keys or handle mnemonics
-- Must not store persistent state
-- Must not call other adapters
-- Must only translate between universal intents and chain-native formats
+### 2. Clone Your Fork
 
-### Gateway
-- Must remain stateless
-- Must not store private keys or signing material
-- Must enforce authentication, rate limits, and request validation
-- Must treat adapters as untrusted execution boundaries
+Run this command in your terminal:
+```bash
+git clone https://github.com/YOUR_USERNAME/sovereign-safe.git
+```
 
-### Client Applications
-- Must sign transactions client-side
-- Must use platform-native secure storage (Secure Enclave where available)
-- Must never transmit private keys or recovery phrases
+### 3. Create a New Branch
 
----
+Always create a new branch for your feature/bug fix:
+```bash
+git checkout -b my-feature-branch
+```
 
-## Branching Strategy
+### 4. Make Your Changes
 
-- `main` — production-ready, protected
-- `dev` — integration branch
-- `feature/*` — new features or changes
-- `fix/*` — bug fixes
-- `security/*` — security-related patches
+Follow the project's coding guidelines:
+- Use ESLint for JavaScript linting.
+- Write clear, descriptive commit messages.
 
-All changes must go through pull requests.
+### 5. Commit Your Changes
 
----
+Make sure your code passes all tests and matches our style guide. Then, commit your changes:
+```bash
+git commit -m "Add a meaningful commit message"
+```
 
-## Pull Request Requirements
+### 6. Push to Your Fork
 
-- Clear description of changes
-- Linked issue or rationale
-- Passing unit tests
-- No breaking changes without approval
-- Security-sensitive changes require review
+```bash
+git push origin my-feature-branch
+```
 
----
+### 7. Create a Pull Request
 
-## Testing Requirements
+Go to the original repository and click on the "New Pull Request" button. Clearly describe your changes, referencing any relevant issues.
 
-- Unit tests for all wallet-core logic
-- Unit tests for each adapter
-- Contract tests between gateway and adapters
-- Deterministic test vectors for key derivation
+## Reporting Issues
 
----
+If you encounter a problem or have a suggestion, please create an issue. Include the following information:
+- A descriptive title and detailed description.
+- Steps to reproduce the issue.
+- Any relevant screenshots or logs.
 
-## Code Style
-
-- Follow existing formatting and lint rules
-- Favor clarity over cleverness
-- No silent failures
-- Explicit error handling required
-
----
-
-## Security Disclosure
-
-If you discover a security issue, do not open a public issue.  
-Report it privately according to the instructions in SECURITY.md.
-
----
-
-## Contributor License
-
-By submitting a contribution, you agree that your work will be licensed under the Apache License, Version 2.0.
+Thank you for your contribution!
+```
