@@ -1,14 +1,3 @@
-### STEP 10 — Mainnet Launch Checklist
-
-File name:
-
-```
-docs/deployment/mainnet-launch-checklist.md
-```
-
-### Body (Copy and Paste Ready)
-
-```markdown
 # SOVEREIGN SAFE — Mainnet Launch Checklist
 
 This checklist outlines the necessary steps and considerations for a successful mainnet launch of the **SOVEREIGN SAFE** wallet, ensuring that all critical components are verified and ready for production deployment.
