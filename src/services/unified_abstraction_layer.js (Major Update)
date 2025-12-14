@@ -1,0 +1,126 @@
+/**
+ * unified_abstraction_layer.js - FINAL MAJOR UPDATE
+ * * Purpose: Formalizes the IChainHandler interface and implements a dynamic 
+ * plug-in mechanism to support any coin, token, and network by allowing new 
+ * chains to be added without changing the core WalletBridge logic.
+ */
+
+import { requestCoSign } from './PolicyEngineApiClient'; 
+
+// --- 1. DEFINE THE UNIVERSAL CHAIN INTERFACE ---
+// All new chain handlers MUST implement these methods.
+// This is the blueprint for 'universal network support'.
+const IChainHandler = {
+    // 1. Fetches address details and balance
+    getAccountDetails: async (address) => { throw new Error("Method not implemented."); },
+    // 2. Converts generic details into chain-native transaction format
+    formatTransaction: async (details) => { throw new Error("Method not implemented."); },
+    // 3. Serializes and hashes the transaction for MPC signing
+    serializeAndHash: async (txObject) => { throw new Error("Method not implemented."); },
+    // 4. Attaches the final signature received from the MPC process
+    attachSignature: async (txObject, signature) => { throw new Error("Method not implemented."); },
+    // 5. Broadcasts the signed transaction to the native network node/RPC
+    broadcastSignedTx: async (signedTxHex) => { throw new Error("Method not implemented."); },
+};
+
+
+// --- 2. EXISTING HANDLERS (Must conform to IChainHandler) ---
+
+const EVM_ChainHandler = {
+    ...IChainHandler, // Inherit interface to ensure completeness
+    // ... actual implementation details (as seen in Step 17) ...
+    getAccountDetails: async (address) => ({ balance: 1.52, tokens: ['UNI', 'DAI'] }),
+    formatTransaction: async (details) => ({ to: details.to, value: details.amount, type: 'EVM_TX' }),
+    serializeAndHash: async (txObject) => `0xETH_HASH_${Math.random().toString(36).substring(7)}`,
+    attachSignature: async (txObject, signature) => `0xETH_SIGNED_TX_...${signature.substring(10, 18)}`,
+    broadcastSignedTx: async (signedTxHex) => ({ txId: `0x_EVM_SENT_${Math.floor(Math.random() * 999)}` }),
+};
+
+const Bitcoin_ChainHandler = {
+    ...IChainHandler,
+    // ... actual implementation details ...
+    getAccountDetails: async (address) => ({ balance: 0.05, UTXOs: ['utxo_1', 'utxo_2'] }),
+    formatTransaction: async (details) => ({ inputs: ['utxo_1'], outputs: [{ to: details.to, value: details.amount }], type: 'UTXO_TX' }),
+    serializeAndHash: async (txObject) => `0xBTC_HASH_${Math.random().toString(36).substring(7)}`,
+    attachSignature: async (txObject, signature) => `0xBTC_SIGNED_TX_...${signature.substring(10, 18)}`,
+    broadcastSignedTx: async (signedTxHex) => ({ txId: `0x_BTC_SENT_${Math.floor(Math.random() * 999)}` }),
+};
+
+// ... other handlers (Solana_ChainHandler, etc.) ...
+
+// --- 3. DYNAMIC CHAIN REGISTRY ---
+const CHAIN_REGISTRY = {
+    'ETH': EVM_ChainHandler,
+    'BNB': EVM_ChainHandler, // EVM chains share a handler
+    'BTC': Bitcoin_ChainHandler,
+    // When a new chain is added (e.g., DOT), only the handler file needs to be created
+    // and this registry updated: 'DOT': DOT_ChainHandler, 
+};
+
+// Conceptual MPC function
+function combineMPCShares(share1, share2, txHash) {
+    return `0xFINAL_SIG_VRS_${txHash.substring(2, 8)}`;
+}
+
+// --- 4. THE WALLET BRIDGE ---
+
+export const WalletBridge = {
+    
+    activeCoinHandler: null, 
+
+    /**
+     * @function setNetwork
+     * @description Switches the underlying handler based on the chosen coin/network 
+     * using the extensible registry.
+     * @param {string} coinSymbol - The symbol of the target coin (e.g., 'ETH', 'BTC', 'SOL').
+     */
+    setNetwork: function(coinSymbol) {
+        const handler = CHAIN_REGISTRY[coinSymbol.toUpperCase()];
+        if (!handler) {
+            // This error guides developers to add a new handler file
+            throw new Error(`[WalletBridge] Universal handler for ${coinSymbol} not found. Please implement IChainHandler.`);
+        }
+        this.activeCoinHandler = handler;
+    },
+
+    getBalance: async function(address) {
+        if (!this.activeCoinHandler) throw new Error("Network not set.");
+        return await this.activeCoinHandler.getAccountDetails(address);
+    },
+
+    sendTransaction: async function(txDetails, deviceKeyShare) {
+        if (!this.activeCoinHandler) throw new Error("Network not set.");
+
+        // NOTE: txDetails must now include fromAddress and estimatedUSD/fiatAmount.
+        const nativeTxObject = await this.activeCoinHandler.formatTransaction(txDetails);
+        const txHash = await this.activeCoinHandler.serializeAndHash(nativeTxObject);
+
+        // Request Co-Sign from Policy Engine (Share 2)
+        const policyEngineResponse = await requestCoSign({
+            fromAddress: txDetails.fromAddress, 
+            txHash: txHash,
+            estimatedUSD: parseFloat(txDetails.fiatAmount.replace('$', '').replace(',', '')),
+            coinSymbol: txDetails.coinSymbol
+        });
+
+        if (policyEngineResponse.status !== 'approved') {
+             throw new Error(`Transaction rejected by policy: ${policyEngineResponse.message}`);
+        }
+
+        // Combine MPC Shares
+        const finalSignature = combineMPCShares(
+            deviceKeyShare, 
+            policyEngineResponse.server_signing_fragment, 
+            txHash
+        );
+        
+        const signedTxHex = await this.activeCoinHandler.attachSignature(nativeTxObject, finalSignature);
+        
+        return await this.activeCoinHandler.broadcastSignedTx(signedTxHex);
+    }
+};
+
+// NOTE TO DEVELOPERS: To add support for a new chain (like Dogecoin or Cardano), 
+// 1. Create a new handler file implementing IChainHandler.
+// 2. Add it to the CHAIN_REGISTRY above.
+// No other core files need modification. 
