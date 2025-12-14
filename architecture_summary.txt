@@ -1,0 +1,29 @@
+SOVEREIGN SAFE WALLET ARCHITECTURAL SUMMARY (V1.0)
+
+GOALS ACHIEVED:
+1. Maximum Security: Implemented a 2-of-3 MPC Key Sharding scheme (T=2, N=3).
+2. Maximum Ease of Use: Uses biometric authentication (Face ID/Touch ID) and a clean, single-entry UI.
+3. Universal Network/Token Support: Achieved via the extensible IChainHandler interface in the WalletBridge.
+
+KEY COMPONENTS AND FLOW:
+
+I. CORE SECURITY INFRASTRUCTURE
+- Step 1: HD Key Generation (BIP-44) - Creates the single master key.
+- Step 2: MPC Key Sharder - Splits the master key into three shares.
+- Share 1 (Device Share): Secured by BiometricsService (Step 4) in the Secure Enclave.
+- Share 2 (Policy Share): Secured by PolicyEngine API (Step 10) on a trusted server.
+- Share 3 (Recovery Share): User saves this (Mnemonic) for disaster recovery.
+
+II. THE TRANSACTION PIPELINE
+1. User Initiation: User opens SendScreen (Step 9), inputs details, and confirms with Biometrics.
+2. Biometric Authentication: BiometricsService (Step 4) authenticates the user and retrieves Share 1.
+3. Abstraction Layer: WalletBridge (Step 3/17/18) is set to the correct IChainHandler (EVM, UTXO, etc.) for universal support.
+4. Hashing: The Handler formats and hashes the transaction, generating the data to be signed.
+5. Policy Check & Co-Sign Request: WalletBridge calls the PolicyEngineApiClient (Step 16), sending the hash, amount, and address.
+6. Server Approval: PolicyEngine API (Step 10) checks policy limits (e.g., daily spending). If approved, it calculates and returns Share 2.
+7. Final Signature: WalletBridge combines Share 1 (Device) + Share 2 (Policy Engine) using the combineMPCShares function to form the single, valid blockchain signature.
+8. Broadcast: The signed transaction is broadcast to the network.
+9. UI Feedback: TransactionStatusScreen (Step 8) provides final feedback and explorer links.
+
+III. EXTENSIBILITY
+- All new coins/networks are added by implementing the IChainHandler interface and registering it in the CHAIN_REGISTRY, ensuring the core MPC and security logic remains untouched.
