@@ -1,28 +1,25 @@
 {
-  "name": "sovereign-safe",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "test": "jest"
+  "name": "sovereign-safe-powerhouse",
+  "displayName": "Sovereign Safe",
+  "description": "The first CRA Protocol™-aligned, non-custodial multi-chain powerhouse wallet. Permanent sovereignty. Immutable audits. Compensation-ready.",
+  "version": "1.0.0",
+  "keywords": [
+    "sovereign-wallet",
+    "cra-protocol",
+    "arweave",
+    "self-custody",
+    "multi-chain",
+    "biometric-security",
+    "permaweb"
+  ],
+  "author": "Cory Miller (@vccmac)",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cmiller9851-wq/sovereign-safe#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmiller9851-wq/sovereign-safe.git"
   },
-  "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.23.1",
-    "@react-navigation/native": "^6.1.17",
-    "@react-navigation/native-stack": "^6.11.0",
-    "bip39": "^3.1.0",
-    "ethers": "^6.13.1",
-    "expo": "~51.0.28",
-    "expo-secure-store": "~13.0.2",
-    "expo-local-authentication": "~14.0.1",
-    "react": "18.2.0",
-    "react-native": "0.74.5",
-    "viem": "^2.21.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "jest": "^29.7.0"
+  "bugs": {
+    "url": "https://github.com/cmiller9851-wq/sovereign-safe/issues"
   }
 }
